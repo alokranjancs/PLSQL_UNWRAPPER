@@ -1,0 +1,29 @@
+GRANT ALL ON DIRECTORY FCISDEBUG TO PUBLIC;
+begin
+  PKGEXPDB_OBJ.PR_EXP_DB_OBJ('PROCEDURE',
+                             --'CRLUSP_DELPHIX_PROVISION',
+                             'GET_USER_EMAIL_DETAILS',
+                             'FCISSMS',
+                             'FCISDEBUG',
+                             true);
+end;
+
+select * from dba_users where username like 'FCIS%' order by username;
+
+select *
+  from user_source
+ where line = 1
+   and rtrim(substr(text, 1, instr(text, chr(10)) - 1)) like '%wrapped';
+
+select * -- count(1)
+  from all_objects obj
+ where obj.owner = user
+   AND obj.object_type in
+       (select distinct type from all_source where owner = user);
+
+select *
+  from table(kt_unwrap.unwrap('COG_DAILYPAYMENTFILELEP', 'PROCEDURE', user));
+
+begin
+  PKGEXPDB_OBJ.PR_EXP_SCHEMA_OBJ_ALL_UNWRAP(user, 'FCISDEBUG');
+end;
